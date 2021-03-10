@@ -1,6 +1,8 @@
 package automation.practice;
 
 import java.util.Arrays;
+
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -11,6 +13,8 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @SpringBootApplication
 public class Application {
+  @Value("${ALLOWED_ORIGINS:http://localhost:4200}")
+  private String allowedOrigins;
 
   public static void main(String[] args) {
     SpringApplication.run(Application.class, args);
@@ -34,7 +38,10 @@ public class Application {
     return new WebMvcConfigurer() {
       @Override
       public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/**").allowedOrigins("http://localhost:4200","https://books2testing.herokuapp.com").allowedMethods("*").allowedHeaders("*");
+        registry
+          .addMapping("/**")
+          .allowedOrigins(allowedOrigins)
+          .allowedMethods("*");
       }
     };
   }
